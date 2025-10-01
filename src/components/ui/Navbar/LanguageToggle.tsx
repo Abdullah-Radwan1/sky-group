@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Languages } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,11 +14,19 @@ import {
 
 export function LanguageToggle() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const router = useRouter();
   //redirect by default delete the searchparams
   function changeLanguage(lang: string) {
     // Remove the current language prefix from the pathname
     const currentPathWithoutLang = pathname.replace(/^\/(ar|en)/, "");
+
+    // Preserve the search params
+    const searchParamsString = searchParams.toString();
+    const queryString = searchParamsString ? `?${searchParamsString}` : "";
+
+    // Redirect to the new language with the same path and search params
+    router.push(`/${lang}/${currentPathWithoutLang}${queryString}`);
   }
 
   return (

@@ -6,8 +6,10 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "../button";
 import { ThemeToggle } from "./ModeToggle";
-import { Menu } from "lucide-react";
+import { Loader, Menu } from "lucide-react";
 import { LanguageToggle } from "./LanguageToggle";
+import { Suspense } from "react";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -81,7 +83,9 @@ export function Navbar() {
               }`}
             >
               <ThemeToggle />
-              <LanguageToggle />
+              <Suspense fallback={<Loader />}>
+                <LanguageToggle />
+              </Suspense>
             </div>
           </section>
         </main>
