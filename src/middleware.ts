@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 const locales = ["en", "ar"];
-const defaultLocale = "ar";
+const defaultLocale = "ar"; // change to "en" if your default is English
 
 function getLocale(request: NextRequest) {
   const acceptLanguage = request.headers.get("accept-language");
@@ -13,7 +13,7 @@ function getLocale(request: NextRequest) {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip static files, favicon, _next, APIs, webhooks
+  // ✅ Skip favicon, _next, API routes, Stripe webhooks, and static files
   if (
     pathname === "/favicon.ico" ||
     pathname.startsWith("/_next") ||
@@ -24,19 +24,25 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check if URL already contains a locale
+  // ✅ Check if the URL already contains a supported locale
   const hasLocale = locales.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
-  if (hasLocale) return NextResponse.next();
 
-  // Detect locale and redirect
+  if (hasLocale) {
+    return NextResponse.next();
+  }
+
+  // ✅ Detect locale from Accept-Language header
   const locale = getLocale(request);
+
+  // ✅ Redirect to the localized version
   const url = request.nextUrl.clone();
   url.pathname = `/${locale}${pathname}`;
   return NextResponse.redirect(url);
 }
 
+// ✅ Matcher: all paths; middleware skips static files internally
 export const config = {
   matcher: "/:path*",
 };
