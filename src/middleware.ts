@@ -1,34 +1,37 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
-const locales = ["en", "ar"]; // Supported locales
-const defaultLocale = "ar"; // Default locale
+const locales = ["en", "ar"];
+const defaultLocale = "ar";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Extract the lang from the pathname (e.g., /en/login -> "en")
-  const pathSegments = pathname.split("/");
-  const lang = pathSegments[1]; // first segment
-
-  // Check if the lang is supported
-  const isSupportedLocale = locales.includes(lang);
-
-  // Fallback to default locale if not supported
-  const locale = isSupportedLocale ? lang : defaultLocale;
-
-  // If the lang is not in the pathname, redirect to the localized version
-  if (!isSupportedLocale) {
-    const newPathname = `/${locale}${pathname}`;
-    request.nextUrl.pathname = newPathname;
-    return NextResponse.redirect(request.nextUrl);
+  // Skip static files and API
+  if (
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
+    pathname.match(/\.(jpg|jpeg|png|gif|webp|svg|ico|css|js|json)$/)
+  ) {
+    return NextResponse.next();
   }
 
-  // Already has a supported locale, continue normally
+  // Detect locale prefix
+  const localePrefix = locales.find((locale) =>
+    pathname.startsWith(`/${locale}`)
+  );
+
+  if (!localePrefix) {
+    // Simple Accept-Language detection
+    const acceptLanguage = request.headers.get("accept-language") || "";
+    const preferred =
+      locales.find((l) => acceptLanguage.includes(l)) || defaultLocale;
+
+    const url = request.nextUrl.clone();
+    url.pathname = `/${preferred}${pathname}`;
+    return NextResponse.redirect(url);
+  }
+
   return NextResponse.next();
 }
 
-export const config = {
-  matcher: [
-    "/((?!_next/|api/|webhooks/stripe|.*\\.(?:jpg|jpeg|png|gif|webp|svg|ico|css|js|json|lottie)).*)",
-  ],
-};
+export const config = { matcher: ["/:path*"] };
