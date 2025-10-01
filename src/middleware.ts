@@ -15,6 +15,7 @@ export function middleware(request: NextRequest) {
 
   // Skip _next, API routes, Stripe webhooks, and static files
   if (
+    pathname === "/favicon.ico" ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
     pathname.startsWith("/webhooks/stripe") ||
