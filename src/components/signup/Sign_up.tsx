@@ -193,7 +193,7 @@ export const Sign_up = () => {
           <div className="w-full lg:w-1/2  ">
             <div className="relative w-full h-full min-h-[600px]">
               <Image
-                src={banner}
+                src={"/banner2.jpg"}
                 alt="Join our community"
                 fill
                 className="object-cover"
