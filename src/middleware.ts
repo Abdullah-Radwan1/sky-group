@@ -15,13 +15,13 @@ export function middleware(request: NextRequest) {
 
   // Skip _next, API routes, Stripe webhooks, and static files
   if (
-    pathname === "/favicon.ico" ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
     pathname.startsWith("/webhooks/stripe") ||
+    pathname === "/favicon.ico" ||
     pathname.match(/\.(jpg|jpeg|png|gif|webp|svg|ico|css|js|json|lottie)$/)
   ) {
-    return NextResponse.next();
+    return NextResponse.next(); // completely skip these paths
   }
 
   // Check if the URL already contains a supported locale
