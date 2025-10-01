@@ -1,20 +1,32 @@
-import { NextResponse, NextRequest } from "next/server";
-import { match } from "@formatjs/intl-localematcher";
-import Negotiator from "negotiator";
+import { NextResponse, type NextRequest } from "next/server";
 
 const locales = ["en", "ar"];
 const defaultLocale = "ar";
 
 const publicPaths = ["/auth/signin", "/auth/signup", "/signin", "/signup"];
 
-// Locale detection using Accept-Language header
+// Simple locale detection from Accept-Language header
 function getPreferredLocale(request: NextRequest) {
-  const negotiatorHeaders = Object.fromEntries(request.headers.entries());
-  const languages = new Negotiator({ headers: negotiatorHeaders }).languages();
-  return match(languages, locales, defaultLocale);
+  const acceptLanguage = request.headers.get("accept-language");
+  if (!acceptLanguage) return defaultLocale;
+
+  const acceptedLanguages = acceptLanguage.split(",").map((lang) => {
+    // remove q-values
+    return lang.split(";")[0].trim();
+  });
+
+  // Return the first match in locales
+  for (const lang of acceptedLanguages) {
+    if (locales.includes(lang)) return lang;
+    // match prefix only (e.g., "en-US" -> "en")
+    const prefix = lang.split("-")[0];
+    if (locales.includes(prefix)) return prefix;
+  }
+
+  return defaultLocale;
 }
 
-// Check if the path is public
+// Check if path is public
 function isPathPublic(path: string) {
   return publicPaths.some((p) => path.startsWith(p));
 }
@@ -22,7 +34,18 @@ function isPathPublic(path: string) {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Detect if the URL already has a locale prefix
+  // Skip static files, favicon, _next, APIs, webhooks
+  if (
+    pathname === "/favicon.ico" ||
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
+    pathname.startsWith("/webhooks/stripe") ||
+    pathname.match(/\.(jpg|jpeg|png|gif|webp|svg|ico|css|js|json|lottie)$/)
+  ) {
+    return NextResponse.next();
+  }
+
+  // Detect locale prefix
   const localePrefix = locales.find((locale) =>
     pathname.startsWith(`/${locale}`)
   );
@@ -39,7 +62,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // If URL already has a locale → continue
+  // URL already has a locale → continue
   return NextResponse.next();
 }
 
