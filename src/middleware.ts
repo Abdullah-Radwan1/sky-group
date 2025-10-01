@@ -11,22 +11,20 @@ function getPreferredLocale(request: NextRequest) {
   if (!acceptLanguage) return defaultLocale;
 
   const acceptedLanguages = acceptLanguage.split(",").map((lang) => {
-    // remove q-values
-    return lang.split(";")[0].trim();
+    return lang.split(";")[0].trim(); // remove q-values
   });
 
-  // Return the first match in locales
+  // Return first matching locale
   for (const lang of acceptedLanguages) {
     if (locales.includes(lang)) return lang;
-    // match prefix only (e.g., "en-US" -> "en")
-    const prefix = lang.split("-")[0];
+    const prefix = lang.split("-")[0]; // match language prefix only
     if (locales.includes(prefix)) return prefix;
   }
 
   return defaultLocale;
 }
 
-// Check if path is public
+// Check if a path is public
 function isPathPublic(path: string) {
   return publicPaths.some((p) => path.startsWith(p));
 }
@@ -34,7 +32,7 @@ function isPathPublic(path: string) {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip static files, favicon, _next, APIs, webhooks
+  // Skip static files, favicon, _next, API routes, webhooks
   if (
     pathname === "/favicon.ico" ||
     pathname.startsWith("/_next") ||
@@ -45,7 +43,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Detect locale prefix
+  // Detect locale prefix in URL
   const localePrefix = locales.find((locale) =>
     pathname.startsWith(`/${locale}`)
   );
@@ -62,10 +60,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // URL already has a locale → continue
+  // URL already has locale → continue
   return NextResponse.next();
 }
 
+// Matcher: run on all pages except static, API, and assets
 export const config = {
   matcher: [
     "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:jpg|jpeg|png|svg|webp|gif|ico|json$)).*)",
