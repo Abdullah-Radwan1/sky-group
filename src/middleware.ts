@@ -13,28 +13,35 @@ function getLocale(request: NextRequest) {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Already has locale?
+  // Skip _next, API routes, Stripe webhooks, and static files
+  if (
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
+    pathname.startsWith("/webhooks/stripe") ||
+    pathname.match(/\.(jpg|jpeg|png|gif|webp|svg|ico|css|js|json|lottie)$/)
+  ) {
+    return NextResponse.next();
+  }
+
+  // Check if the URL already contains a supported locale
   const hasLocale = locales.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
 
   if (hasLocale) {
-    // Let Next.js continue normally
     return NextResponse.next();
   }
 
-  // Detect locale
+  // Detect locale from Accept-Language header
   const locale = getLocale(request);
 
-  // Clone URL and redirect
+  // Redirect to the localized version
   const url = request.nextUrl.clone();
   url.pathname = `/${locale}${pathname}`;
-
   return NextResponse.redirect(url);
 }
 
+// Safe matcher for all paths
 export const config = {
-  matcher: [
-    "/((?!_next/|api/|webhooks/stripe|.*\\.(?:jpg|jpeg|png|gif|webp|svg|ico|css|js|json|lottie)$).*)",
-  ],
+  matcher: "/:path*",
 };
