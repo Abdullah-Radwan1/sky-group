@@ -68,10 +68,10 @@ export function Navbar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link href="/login">{ar ? "تسجيل الدخول" : "Login"}</Link>
+                  <Link href="#">{ar ? "تسجيل الدخول" : "Login"}</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/about">{ar ? "من نحن" : "About Us"}</Link>
+                  <Link href="#">{ar ? "من نحن" : "About Us"}</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

@@ -71,7 +71,7 @@ export const Sign_up = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-start mt-20 justify-center sm:p-4 p-0">
+    <div className="min-h-screen flex items-start mt-10 justify-center sm:p-4 p-2">
       <div className="w-full max-w-6xl rounded-xl border bg-card shadow-lg overflow-hidden">
         <div className="flex flex-col lg:flex-row">
           {/* Form Section */}
