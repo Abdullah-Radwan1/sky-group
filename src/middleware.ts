@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 const locales = ["en", "ar"];
-const defaultLocale = "ar"; // or "en", depending on what routes exist
+const defaultLocale = "ar"; // change to "en" if your default is English
 
 function getLocale(request: NextRequest) {
   const acceptLanguage = request.headers.get("accept-language");
@@ -17,12 +17,16 @@ export function middleware(request: NextRequest) {
   const hasLocale = locales.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
-  if (hasLocale) return;
+
+  if (hasLocale) {
+    // Let Next.js continue normally
+    return NextResponse.next();
+  }
 
   // Detect locale
   const locale = getLocale(request);
 
-  // Clone URL
+  // Clone URL and redirect
   const url = request.nextUrl.clone();
   url.pathname = `/${locale}${pathname}`;
 
