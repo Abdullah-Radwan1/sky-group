@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/select";
 import { Loader, User, Phone, Briefcase, MapPin } from "lucide-react";
 import Image from "next/image";
-import banner from "@/../public/banner2.jpg";
 
 export const Sign_up = () => {
   const [loading, setLoading] = useState(false);
