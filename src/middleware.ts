@@ -1,48 +1,34 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
-const locales = ["en", "ar"];
-const defaultLocale = "ar"; // change to "en" if your default is English
+const locales = ["en", "ar"]; // Supported locales
+const defaultLocale = "ar"; // Default locale
 
-function getLocale(request: NextRequest) {
-  const acceptLanguage = request.headers.get("accept-language");
-  if (acceptLanguage?.includes("ar")) return "ar";
-  return defaultLocale;
-}
-
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // ✅ Skip favicon, _next, API routes, Stripe webhooks, and static files
-  if (
-    pathname === "/favicon.ico" ||
-    pathname.startsWith("/_next") ||
-    pathname.startsWith("/api") ||
-    pathname.startsWith("/webhooks/stripe") ||
-    pathname.match(/\.(jpg|jpeg|png|gif|webp|svg|ico|css|js|json|lottie)$/)
-  ) {
-    return NextResponse.next();
+  // Extract the lang from the pathname (e.g., /en/login -> "en")
+  const pathSegments = pathname.split("/");
+  const lang = pathSegments[1]; // first segment
+
+  // Check if the lang is supported
+  const isSupportedLocale = locales.includes(lang);
+
+  // Fallback to default locale if not supported
+  const locale = isSupportedLocale ? lang : defaultLocale;
+
+  // If the lang is not in the pathname, redirect to the localized version
+  if (!isSupportedLocale) {
+    const newPathname = `/${locale}${pathname}`;
+    request.nextUrl.pathname = newPathname;
+    return NextResponse.redirect(request.nextUrl);
   }
 
-  // ✅ Check if the URL already contains a supported locale
-  const hasLocale = locales.some(
-    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
-  );
-
-  if (hasLocale) {
-    return NextResponse.next();
-  }
-
-  // ✅ Detect locale from Accept-Language header
-  const locale = getLocale(request);
-
-  // ✅ Redirect to the localized version
-  const url = request.nextUrl.clone();
-  url.pathname = `/${locale}${pathname}`;
-  return NextResponse.redirect(url);
+  // Already has a supported locale, continue normally
+  return NextResponse.next();
 }
 
-// ✅ Matcher: all paths; middleware skips static files internally
 export const config = {
-  matcher: "/:path*",
+  matcher: [
+    "/((?!_next/|api/|webhooks/stripe|.*\\.(?:jpg|jpeg|png|gif|webp|svg|ico|css|js|json|lottie)).*)",
+  ],
 };
