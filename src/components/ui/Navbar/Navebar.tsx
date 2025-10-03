@@ -52,7 +52,7 @@ export function Navbar() {
           {/* Right side */}
           <section className="flex items-center gap-4">
             {/* Dropdown Menu */}
-            <DropdownMenu>
+            <DropdownMenu dir={ar ? "rtl" : "ltr"}>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
@@ -68,10 +68,14 @@ export function Navbar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link href="#">{ar ? "تسجيل الدخول" : "Login"}</Link>
+                  <Link href={`${lang}/search`}>
+                    {ar ? "البحث " : "Search"}
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="#">{ar ? "من نحن" : "About Us"}</Link>
+                  <Link href={`${lang}/about`}>
+                    {ar ? "احنا مين" : "About Us"}
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
