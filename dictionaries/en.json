@@ -1,0 +1,63 @@
+{
+  "sign_up": {
+    "title": "Join Sky Group",
+    "subtitle": "Create your account and start your journey with us",
+
+    "form": {
+      "full_name": {
+        "label": "Full Name",
+        "placeholder": "Enter your full name"
+      },
+      "phone_number": {
+        "label": "Phone Number",
+        "placeholder": "+20 123 456 789"
+      },
+      "job_title": {
+        "label": "Job Title",
+        "placeholder": "Software Engineer"
+      },
+      "country": {
+        "label": "Country",
+        "placeholder": "Select your country"
+      },
+      "submit_button": {
+        "default": "Create Account",
+        "loading": "Creating Account..."
+      }
+    },
+
+    "login_prompt": {
+      "text": "Already have an account?",
+      "link": "Sign in"
+    },
+
+    "banner": {
+      "title": "Welcome to Sky Group",
+      "subtitle": "Join thousands of professionals already using our events platform",
+      "community_status": "Live community of 10,000+ members"
+    },
+
+    "success_message": "Form submitted!"
+  },
+  "search": {
+  "title": "Search User",
+  "start_message": "Start searching easily",
+  "form": {
+    "hall": {
+      "label": "Hall",
+      "placeholder": "Select a hall"
+    },
+    "email": {
+      "label": "Email",
+      "placeholder": "Enter email"
+    },
+    "phone": {
+      "label": "Phone Number",
+      "placeholder": "+20 123 456 789"
+    }
+  }
+}
+
+  
+}
+

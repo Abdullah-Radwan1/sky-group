@@ -13,8 +13,11 @@ import {
 } from "@/components/ui/select";
 import { Loader, User, Phone, Briefcase, MapPin } from "lucide-react";
 import Image from "next/image";
+import { TypeDictionary } from "../../../dictionaries/en";
+import { useParams, useSearchParams } from "next/navigation";
 
-export const Sign_up = () => {
+export const Sign_up = ({ dict }: { dict: TypeDictionary }) => {
+  const {lang} = useParams()
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
@@ -24,24 +27,10 @@ export const Sign_up = () => {
   });
 
   const countries = [
-    "United States",
-    "Canada",
-    "United Kingdom",
-    "Australia",
-    "Germany",
-    "France",
-    "Japan",
-    "South Korea",
-    "United Arab Emirates",
-    "Saudi Arabia",
-    "Egypt",
-    "South Africa",
-    "Brazil",
-    "Mexico",
-    "India",
-    "China",
-    "Singapore",
-    "Malaysia",
+    "United States", "Canada", "United Kingdom", "Australia", "Germany",
+    "France", "Japan", "South Korea", "United Arab Emirates", "Saudi Arabia",
+    "Egypt", "South Africa", "Brazil", "Mexico", "India", "China",
+    "Singapore", "Malaysia",
   ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,17 +47,17 @@ export const Sign_up = () => {
       country: value,
     }));
   };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    // Simulate API call
     setTimeout(() => {
       setLoading(false);
-      alert("Form submitted!");
+      alert(dict.sign_up.success_message);
     }, 2000);
   };
+
+  const t = dict.sign_up;
 
   return (
     <div className="min-h-screen flex items-start mt-10 justify-center sm:p-4 p-2">
@@ -78,17 +67,15 @@ export const Sign_up = () => {
           <div className="w-full lg:w-1/2 p-8">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Join Sky Group
+                {t.title}
               </h1>
-              <p className="text-muted-foreground mt-2">
-                Create your account and start your journey with us
-              </p>
+              <p className="text-muted-foreground mt-2">{t.subtitle}</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Full Name */}
               <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name</Label>
+                <Label htmlFor="fullName">{t.form.full_name.label}</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-50" />
                   <Input
@@ -97,7 +84,7 @@ export const Sign_up = () => {
                     name="fullName"
                     value={formData.fullName}
                     onChange={handleChange}
-                    placeholder="Enter your full name"
+                    placeholder={t.form.full_name.placeholder}
                     required
                     className="w-full pl-10 h-11"
                   />
@@ -106,16 +93,17 @@ export const Sign_up = () => {
 
               {/* Phone Number */}
               <div className="space-y-2">
-                <Label htmlFor="phoneNumber">Phone Number</Label>
+                <Label htmlFor="phoneNumber">{t.form.phone_number.label}</Label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-50" />
                   <Input
                     id="phoneNumber"
                     type="tel"
+                    dir={lang ==="ar" ? "rtl" : "ltr"}
                     name="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handleChange}
-                    placeholder="+20 123 456 789"
+                    placeholder={t.form.phone_number.placeholder}
                     required
                     className="w-full pl-10 h-11"
                   />
@@ -124,7 +112,7 @@ export const Sign_up = () => {
 
               {/* Job Title */}
               <div className="space-y-2">
-                <Label htmlFor="jobTitle">Job Title</Label>
+                <Label htmlFor="jobTitle">{t.form.job_title.label}</Label>
                 <div className="relative">
                   <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-50" />
                   <Input
@@ -133,7 +121,7 @@ export const Sign_up = () => {
                     name="jobTitle"
                     value={formData.jobTitle}
                     onChange={handleChange}
-                    placeholder="Software Engineer"
+                    placeholder={t.form.job_title.placeholder}
                     required
                     className="w-full pl-10 h-11"
                   />
@@ -142,15 +130,16 @@ export const Sign_up = () => {
 
               {/* Country */}
               <div className="space-y-2">
-                <Label htmlFor="country">Country</Label>
+                <Label htmlFor="country">{t.form.country.label}</Label>
                 <Select
+                dir={lang ==="ar" ? "rtl" : "ltr"}
                   onValueChange={handleCountryChange}
                   value={formData.country}
                 >
                   <SelectTrigger className="w-full h-11" id="country">
                     <div className="flex items-center gap-2">
                       <MapPin className="h-4 w-4 opacity-50" />
-                      <SelectValue placeholder="Select your country" />
+                      <SelectValue placeholder={t.form.country.placeholder} />
                     </div>
                   </SelectTrigger>
                   <SelectContent>
@@ -170,26 +159,26 @@ export const Sign_up = () => {
                 disabled={loading}
               >
                 {loading && <Loader className="w-4 h-4 animate-spin" />}
-                {loading ? "Creating Account..." : "Create Account"}
+                {loading ? t.form.submit_button.loading : t.form.submit_button.default}
               </Button>
             </form>
 
             {/* Login Link */}
             <div className="text-center mt-6">
               <p className="text-sm text-muted-foreground">
-                Already have an account?{" "}
+                {t.login_prompt.text}{" "}
                 <a
                   href="#"
                   className="text-primary hover:underline font-medium"
                 >
-                  Sign in
+                  {t.login_prompt.link}
                 </a>
               </p>
             </div>
           </div>
 
-          {/* Banner Section - Inside the same card */}
-          <div className="w-full lg:w-1/2  ">
+          {/* Banner Section */}
+          <div className="w-full lg:w-1/2">
             <div className="relative w-full h-full min-h-[600px]">
               <Image
                 src={"/banner2.jpg"}
@@ -198,21 +187,15 @@ export const Sign_up = () => {
                 className="object-cover"
                 priority
               />
-              {/* Gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/40"></div>
-
-              {/* Text overlay */}
               <div className="absolute inset-0 flex flex-col justify-end p-8 text-white">
                 <h2 className="text-3xl lg:text-4xl font-bold mb-4">
-                  Welcome to Sky Group
+                  {t.banner.title}
                 </h2>
-                <p className="text-xl opacity-90 mb-6">
-                  Join thousands of professionals already using our events
-                  platform
-                </p>
+                <p className="text-xl opacity-90 mb-6">{t.banner.subtitle}</p>
                 <div className="flex items-center gap-2 text-sm opacity-80">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span>Live community of 10,000+ members</span>
+                  <span>{t.banner.community_status}</span>
                 </div>
               </div>
             </div>
