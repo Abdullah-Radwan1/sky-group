@@ -1,0 +1,61 @@
+{
+  "sign_up": {
+    "title": "انضم إلى سكاي جروب",
+    "subtitle": "أنشئ حسابك وابدأ رحلتك معنا",
+
+    "form": {
+      "full_name": {
+        "label": "الاسم الكامل",
+        "placeholder": "أدخل اسمك الكامل"
+      },
+      "phone_number": {
+        "label": "رقم الهاتف",
+        "placeholder": "+20 123 456 789"
+      },
+      "job_title": {
+        "label": "المسمى الوظيفي",
+        "placeholder": "مهندس برمجيات"
+      },
+      "country": {
+        "label": "الدولة",
+        "placeholder": "اختر دولتك"
+      },
+      "submit_button": {
+        "default": "إنشاء حساب",
+        "loading": "جاري إنشاء الحساب..."
+      }
+    },
+
+    "login_prompt": {
+      "text": "لديك حساب بالفعل؟",
+      "link": "تسجيل الدخول"
+    },
+
+    "banner": {
+      "title": "مرحباً بك في سكاي جروب",
+      "subtitle": "انضم إلى آلاف المحترفين الذين يستخدمون منصتنا للفعاليات",
+      "community_status": "مجتمع حي يضم أكثر من 10,000 عضو"
+    },
+
+    "success_message": "تم إرسال النموذج!"
+  },
+ "search": {
+  "title": "ابحث عن المستخدم",
+  "start_message": "ابدأ البحث بسهولة",
+  "form": {
+    "hall": {
+      "label": "القاعات",
+      "placeholder": "اختر قاعة"
+    },
+    "email": {
+      "label": "البريد الإلكتروني",
+      "placeholder": "أدخل البريد الإلكتروني"
+    },
+    "phone": {
+      "label": "رقم الهاتف",
+      "placeholder": "+20 123 456 789"
+    }
+  }
+}
+
+}
