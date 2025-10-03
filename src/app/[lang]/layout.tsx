@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ReactNode } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import { ThemeProvider } from "../utils/theme-provider";
@@ -21,16 +22,20 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-  params
-}: Readonly<{
-  children: React.ReactNode;
-   params: Promise<{ lang: 'en' | 'ar' }>
-}>) {
-
-    const { lang } = await params
+  params,
+}: {
+  children: ReactNode;
+  params: Promise<{ lang: string }>; // ✅ Now accepting Promise
+}) {
+  // ✅ Await the params
+  const { lang } = await params;
 
   return (
-    <html dir={lang ==="ar" ? "rtl" : "ltr"} lang="en" suppressHydrationWarning>
+    <html
+      dir={lang === "ar" ? "rtl" : "ltr"}
+      lang={lang}
+      suppressHydrationWarning
+    >
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
